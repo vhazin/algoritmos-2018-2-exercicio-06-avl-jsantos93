@@ -12,7 +12,7 @@ int main(void)
         int arvore[n];
         for (int i = 0; i < n; i++)
         {
-            scanf("%d", valor);
+            scanf("%d", &valor);
             arvore[i] = valor;
         }
         for (int j = 0; j < n; j++)

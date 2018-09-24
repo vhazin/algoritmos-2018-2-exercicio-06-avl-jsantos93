@@ -1,92 +1,22 @@
 #include <stdio.h>
+#include <stdlib.h>
+#define max(a, b) (((a) > (b)) ? (a) : (b))
 
-int minDepth(int a[], int root, int numeros)
+int getHeight(int a[], int pos, int numeros)
 {
-    int esq = 2 * root + 1;
-    int dir = 2 * root + 2;
-
-    if (a[root] == -1)
-    {
-        return 0;
-    }
+    int esq = 2 * pos + 1;
+    int dir = 2 * pos + 2;
 
     if (dir < numeros)
     {
-        if (a[esq] == -1)
-        {
-            return 1;
-        }
-
-        if (a[dir] == -1 && a[esq] != 12)
-        {
-            return 1;
-        }
-
-        if (a[dir] == -1 && a[esq] == 12)
-        {
-            return 2;
-        }
-
-        if (minDepth(a, esq, numeros) >= minDepth(a, dir, numeros))
-        {
-            return minDepth(a, dir, numeros) + 1;
-        }
-        else
-        {
-            return minDepth(a, esq, numeros) + 1;
-        }
+        return a[pos] == -1 ? 0 : 1 + max(getHeight(a, dir, numeros), getHeight(a, esq, numeros));
     }
-    else
+    if (esq < numeros)
     {
-        if (esq < numeros)
-        {
-            return minDepth(a, esq, numeros) + 1;
-        }
-        else
-        {
-            return 1;
-        }
+        return a[pos] == -1 ? 0 : 1 + getHeight(a, esq, numeros);
     }
-}
 
-int maxDepth(int a[], int root, int numeros)
-{
-    int esq = (2 * root) + 1;
-    int dir = (2 * root) + 2;
-
-    if (a[root] == -1)
-    {
-        return 0;
-    }
-    else
-    {
-        if (dir < numeros)
-        {
-            int lDepth = maxDepth(a, esq, numeros);
-            int rDepth = maxDepth(a, dir, numeros);
-
-            if (lDepth > rDepth)
-            {
-                return (lDepth + 1);
-            }
-            else
-            {
-                return (rDepth + 1);
-            }
-        }
-        else
-        {
-            if (esq < numeros)
-            {
-                int lDepth = maxDepth(a, esq, numeros);
-                return (lDepth + 1);
-            }
-            else
-            {
-                return 1;
-            }
-        }
-    }
+    return a[pos] == -1 ? 0 : 1;
 }
 
 int main(void)
@@ -105,10 +35,21 @@ int main(void)
             scanf("%d", &tree[i]);
         }
 
-        int min = minDepth(tree, 0, numeros);
-        int max = maxDepth(tree, 0, numeros);
+        int flag = 1;
 
-        if (max - min <= 1)
+        for (int j = 1; j < numeros / 2; j += 2)
+        {
+            int min = getHeight(tree, j, numeros);
+            int max = getHeight(tree, j + 1, numeros);
+
+            if (abs(max - min) > 1)
+            {
+                flag = 0;
+                break;
+            }
+        }
+
+        if (flag)
         {
             printf("T\n");
         }
